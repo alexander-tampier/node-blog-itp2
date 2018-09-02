@@ -4,13 +4,20 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
 const logger = require('./config/logger');
 const routes = require('./routes/router');
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/blog-posts');
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.load();
+}
+
+const { MONGODB_USERNAME, MONGODB_PASSWORD, MONGODB_URI } = process.env;
+
+mongoose.connect(MONGODB_URI || `mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@ds143242.mlab.com:43242/itp2rest`);
 const db = mongoose.connection;
 
 app.use(morgan('dev'));
